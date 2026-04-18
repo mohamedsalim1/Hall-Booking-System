@@ -335,7 +335,7 @@ const BookingDetails = ({ booking: initialBooking, onClose, onUpdate }) => {
           </div>
 
           <div className="form-group">
-            <label>المبلغ (ل.س)</label>
+            <label>المبلغ (دولار أمريكي)</label>
             <input
               type="number"
               min="1"

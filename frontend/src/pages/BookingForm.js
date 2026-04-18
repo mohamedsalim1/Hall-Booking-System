@@ -228,7 +228,7 @@ const BookingForm = ({ halls, eventTypes: propEventTypes, timeSlots: propTimeSlo
                   <input type="number" min="1" value={formData.numberOfTables} onChange={(e) => handleChange('numberOfTables', e.target.value)} placeholder="مثال: 30" />
                 </div>
                 <div className="form-group">
-                  <label>سعر الطاولة (ل.س)</label>
+                  <label>سعر الطاولة (دولار أمريكي)</label>
                   <input type="number" min="0" step="0.01" value={formData.tablePrice} onChange={(e) => handleChange('tablePrice', e.target.value)} placeholder="السعر لكل طاولة" />
                 </div>
               </div>

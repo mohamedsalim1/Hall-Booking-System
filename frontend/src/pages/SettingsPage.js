@@ -226,15 +226,15 @@ const SettingsPage = () => {
   const hallColumns = [
     { key: 'name', label: 'الاسم' },
     { key: 'capacity', label: 'السعة' },
-    { key: 'price', label: 'سعر الصالة', render: (value) => `${value} ل.س` },
-    { key: 'tablePrice', label: 'سعر الطاولة', render: (value) => `${value || 0} ل.س` },
+    { key: 'price', label: 'سعر الصالة', render: (value) => `${value} دولار أمريكي` },
+    { key: 'tablePrice', label: 'سعر الطاولة', render: (value) => `${value || 0} دولار أمريكي` },
     { key: 'description', label: 'الوصف' }
   ];
 
   const timeSlotColumns = [
     { key: 'startTime', label: 'وقت البداية' },
     { key: 'endTime', label: 'وقت النهاية' },
-    { key: 'price', label: 'السعر', render: (value) => `${value} ل.س` }
+    { key: 'price', label: 'السعر', render: (value) => `${value} دولار أمريكي` }
   ];
 
   const eventTypeColumns = [
@@ -244,7 +244,7 @@ const SettingsPage = () => {
 
   const serviceColumns = [
     { key: 'name', label: 'الاسم' },
-    { key: 'price', label: 'السعر', render: (value) => `${value} ل.س` },
+    { key: 'price', label: 'السعر', render: (value) => `${value} دولار أمريكي` },
     { key: 'description', label: 'الوصف' }
   ];
 
