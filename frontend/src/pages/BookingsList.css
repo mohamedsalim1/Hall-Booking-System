@@ -1,0 +1,130 @@
+.bookings-list {
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.list-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 32px;
+}
+
+.list-header h1 {
+  margin: 0 0 8px 0;
+  font-size: 2.5rem;
+}
+
+.list-header p {
+  color: var(--muted);
+  font-size: 1.1rem;
+}
+
+.filters-section h2 {
+  margin: 0 0 20px 0;
+  font-size: 1.3rem;
+  color: var(--gold);
+}
+
+.filters-bar {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+  margin-bottom: 30px;
+  padding: 20px;
+  border: 1px solid var(--border);
+  background: var(--bg);
+  border-radius: 16px;
+}
+
+.filter-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.filter-group label {
+  margin-bottom: 8px;
+  color: var(--muted);
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.search-group input {
+  padding: 14px 16px;
+  border-radius: 12px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  color: var(--text);
+  font-size: 0.95rem;
+}
+
+.search-group input:focus {
+  outline: none;
+  border-color: var(--gold);
+  box-shadow: 0 0 0 2px rgba(207, 162, 106, 0.2);
+}
+
+.table-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.table-header h2 {
+  margin: 0;
+  font-size: 1.3rem;
+  color: var(--gold);
+}
+
+.no-data {
+  text-align: center;
+  padding: 60px 20px;
+  color: var(--muted);
+}
+
+.no-data p {
+  margin: 0;
+  font-size: 1.1rem;
+}
+
+.loading {
+  text-align: center;
+  padding: 60px 20px;
+  color: var(--muted);
+  font-size: 1.2rem;
+}
+
+.toggle-container {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  background: rgba(210, 166, 84, 0.05);
+  border: 1px dashed var(--gold);
+  border-radius: 12px;
+  cursor: pointer;
+}
+
+.toggle-container input {
+  cursor: pointer;
+  width: 18px;
+  height: 18px;
+  accent-color: var(--gold);
+}
+
+.toggle-container span {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.actions-column {
+  white-space: nowrap;
+  min-width: 180px;
+  text-align: center !important;
+}
+
+.actions-column div {
+  justify-content: center;
+}

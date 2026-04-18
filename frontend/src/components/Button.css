@@ -1,0 +1,40 @@
+.button {
+  border: 1px solid var(--border);
+  padding: 14px 22px;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--text);
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.2s ease;
+  font-size: 0.95rem;
+  direction: rtl;
+}
+
+.button.primary {
+  background: linear-gradient(135deg, rgba(207, 162, 106, 0.2), var(--panel));
+  color: var(--gold);
+  border-color: var(--gold);
+}
+
+.button.primary:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 8px 20px rgba(207, 162, 106, 0.3);
+}
+
+.button.secondary {
+  color: var(--muted);
+}
+
+.button.secondary:hover {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.button.danger {
+  color: #ff6b6b;
+  border-color: rgba(255, 107, 107, 0.4);
+}
+
+.button.danger:hover {
+  background: rgba(255, 107, 107, 0.1);
+}

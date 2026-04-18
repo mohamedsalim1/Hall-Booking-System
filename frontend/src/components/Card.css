@@ -1,0 +1,17 @@
+.card {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 24px;
+  padding: 26px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  transition: all 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+  position: relative;
+  z-index: 1;
+}
+
+.card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 15px 35px rgba(210, 166, 84, 0.2), 0 0 20px rgba(210, 166, 84, 0.1);
+  border-color: rgba(210, 166, 84, 0.5);
+  z-index: 2;
+}

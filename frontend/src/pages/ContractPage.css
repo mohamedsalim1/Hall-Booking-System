@@ -1,0 +1,387 @@
+.contract-page {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 40px 20px;
+  direction: rtl;
+}
+
+.contract-actions {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 30px;
+  justify-content: flex-end;
+}
+
+.contract-container {
+  background: white;
+  color: #1a1a1a;
+  padding: 50px;
+  border-radius: 4px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+  font-family: 'Cairo', 'Times New Roman', serif;
+  line-height: 1.8;
+  border: 1px solid #eee;
+}
+
+.contract-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 50px;
+  border-bottom: 3px double #d2a654;
+  padding-bottom: 30px;
+}
+
+.logo-section {
+  text-align: right;
+}
+
+.logo-crest {
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  background: #fbf8f3;
+  border: 2px solid #d2a654;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 32px;
+  font-weight: bold;
+  color: #d2a654;
+  margin-bottom: 15px;
+}
+
+.logo-section h1 {
+  margin: 0;
+  font-size: 28px;
+  color: #1a1a1a;
+  font-weight: 800;
+}
+
+.logo-section p {
+  margin: 5px 0 0;
+  color: #8e8a84;
+  font-size: 15px;
+}
+
+.report-title {
+  text-align: left;
+}
+
+.report-title h2 {
+  margin: 0;
+  font-size: 24px;
+  color: #1a1a1a;
+  letter-spacing: 0;
+}
+
+.report-title p {
+  margin: 8px 0 0;
+  color: #8e8a84;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.contract-body {
+  margin-bottom: 50px;
+}
+
+.contract-section {
+  margin-bottom: 40px;
+}
+
+.contract-info-grid {
+  display: grid;
+  grid-template-columns: 1fr 1.5fr;
+  gap: 30px;
+  align-items: start;
+}
+
+.financial-section {
+  /* Removed margin-top as it's now in a grid */
+}
+
+.contract-section h3 {
+  margin: 0 0 20px 0;
+  font-size: 20px;
+  color: #1a1a1a;
+  border-right: 4px solid #d2a654;
+  padding-right: 15px;
+  background: #fdfaf5;
+  padding-top: 5px;
+  padding-bottom: 5px;
+}
+
+.contract-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 0;
+  border-bottom: 1px solid #f5f5f5;
+}
+
+.contract-row:last-of-type {
+  border-bottom: none;
+}
+
+.contract-row span {
+  color: #666;
+  font-weight: 500;
+}
+
+.contract-row strong {
+  color: #1a1a1a;
+  font-weight: 700;
+}
+
+.contract-row.total-row {
+  border-top: 2px solid #1a1a1a;
+  margin-top: 15px;
+  padding: 20px 0;
+}
+
+.contract-row.total-row strong {
+  font-size: 22px;
+  color: #d2a654;
+}
+
+/* Payments Table */
+.payments-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 15px;
+}
+
+.payments-table th {
+  text-align: right;
+  padding: 12px;
+  background: #f9f9f9;
+  border-bottom: 2px solid #eee;
+  font-weight: 700;
+  color: #444;
+}
+
+.payments-table td {
+  padding: 12px;
+  border-bottom: 1px solid #eee;
+  font-size: 15px;
+}
+
+.text-success {
+  color: #16a34a !important;
+}
+
+.text-danger {
+  color: #dc2626 !important;
+}
+
+.notes-display {
+  background: #fbfbfb;
+  padding: 20px;
+  border-radius: 8px;
+  border-right: 4px solid #d2a654;
+  margin: 15px 0;
+  color: #444;
+  line-height: 1.8;
+}
+
+.contract-footer {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 80px;
+  gap: 40px;
+}
+
+.auth-box {
+  flex: 1;
+}
+
+.auth-box p {
+  margin: 0 0 15px 0;
+  font-weight: 700;
+  color: #444;
+}
+
+.signature-space {
+  height: 80px;
+  border: 1px dashed #ccc;
+  border-radius: 4px;
+}
+
+.terms-section {
+  margin-top: 20px;
+}
+
+.contract-note-editor {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #d2a654;
+  border-radius: 8px;
+  background: #fdfaf5;
+  font-family: inherit;
+  font-size: 14px;
+  margin-bottom: 15px;
+  resize: vertical;
+  min-height: 80px;
+}
+
+.contract-note-display {
+  background: #fff9eb;
+  padding: 15px;
+  border-right: 4px solid #d2a654;
+  font-size: 15px;
+  color: #1a1a1a;
+  line-height: 1.6;
+}
+
+.contract-print-footer {
+  text-align: center;
+  margin-top: 60px;
+  padding-top: 30px;
+  border-top: 1px solid #eee;
+  color: #8e8a84;
+  font-size: 13px;
+}
+
+.contract-print-footer p {
+  margin: 6px 0;
+}
+
+/* Print styles optimized for Single Page A4 */
+@media print {
+  @page {
+    size: A4;
+    margin: 8mm; /* Slightly smaller margin for more space */
+  }
+
+  body {
+    background: white;
+    font-size: 12px; /* Uniformly smaller for print */
+    color: black;
+  }
+
+  .contract-page {
+    padding: 0;
+    width: 100%;
+    max-width: 100%;
+    margin: 0;
+  }
+
+  .no-print {
+    display: none !important;
+  }
+
+  .contract-container {
+    box-shadow: none !important;
+    border: none !important;
+    padding: 0 !important;
+    width: 100% !important;
+    /* Zoom effect to ensure content fits */
+    transform: scale(0.96);
+    transform-origin: top center;
+  }
+
+  .contract-header {
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+  }
+
+  .logo-crest {
+    width: 45px;
+    height: 45px;
+    font-size: 22px;
+    margin-bottom: 5px;
+    background: #d2a654 !important;
+    color: white !important;
+    -webkit-print-color-adjust: exact;
+  }
+
+  .logo-section h1 { font-size: 20px; }
+  .report-title h2 { font-size: 18px; }
+
+  .contract-body {
+    margin-bottom: 10px;
+  }
+
+  .contract-section {
+    margin-bottom: 12px !important;
+    break-inside: avoid; /* Prevent splitting sections across pages */
+  }
+
+  .contract-section h3 {
+    font-size: 14px;
+    margin-bottom: 8px;
+    padding: 3px 8px;
+    background: #f0f0f0 !important;
+    border-right: 3px solid #d2a654 !important;
+    -webkit-print-color-adjust: exact;
+  }
+
+  .contract-info-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+    margin-bottom: 10px;
+  }
+
+  .contract-row {
+    padding: 4px 0;
+  }
+
+  .contract-row span {
+    font-size: 11px;
+    color: #555;
+  }
+
+  .contract-row strong {
+    font-size: 12px;
+  }
+
+  .financial-section {
+    margin-top: 0 !important;
+  }
+
+  .contract-row.total-row {
+    margin-top: 3px;
+    padding: 8px 0;
+    border-top: 1.5px solid #000 !important;
+  }
+
+  .contract-row.total-row strong {
+    font-size: 16px;
+  }
+
+  .payments-table th, .payments-table td {
+    padding: 4px 8px;
+    font-size: 11px;
+  }
+
+  .contract-note-display {
+    padding: 8px;
+    margin: 4px 0;
+    font-size: 11px;
+    background: #fafafa !important;
+    border-right: 2px solid #d2a654 !important;
+    -webkit-print-color-adjust: exact;
+  }
+
+  .contract-footer {
+    margin-top: 20px;
+    gap: 20px;
+  }
+
+  .auth-box p {
+    font-size: 11px;
+    margin-bottom: 5px;
+  }
+
+  .signature-space {
+    height: 50px;
+  }
+
+  .contract-print-footer {
+    margin-top: 15px;
+    padding-top: 8px;
+    font-size: 10px;
+  }
+}
