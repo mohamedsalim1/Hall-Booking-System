@@ -8,3 +8,6 @@ yarn-error.log*
 **/build
 **/.next
 **/out
+backend/prisma/*.db
+backend/prisma/*.db-journal
+backend/generated

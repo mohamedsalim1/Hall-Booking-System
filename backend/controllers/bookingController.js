@@ -79,7 +79,7 @@ const listBookings = async (req, res, next) => {
 
     if (search) {
       where.OR = [
-        { customerName: { contains: search, mode: 'insensitive' } },
+        { customerName: { contains: search } },
         { customerPhone: { contains: search } }
       ];
     }

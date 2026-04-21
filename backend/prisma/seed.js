@@ -1,10 +1,15 @@
-const { PrismaClient } = require('@prisma/client');
-const bcrypt = require('bcrypt');
+const path = require('path');
+const dotenv = require('dotenv');
+const { PrismaClient } = require('../generated/client');
+const crypto = require('crypto');
+
+dotenv.config({ path: path.resolve(__dirname, '../.env') });
+
 const prisma = new PrismaClient();
 
 async function main() {
   // Create admin user
-  const hashedPassword = await bcrypt.hash('admin123', 10);
+  const hashedPassword = crypto.createHash('sha256').update('admin123').digest('hex');
   await prisma.user.upsert({
     where: { email: 'admin@example.com' },
     update: {},

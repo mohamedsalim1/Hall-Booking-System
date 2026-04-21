@@ -1,0 +1,43 @@
+{
+  "name": "hall-booking-system-desktop",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Desktop wrapper for the hall booking system.",
+  "main": "electron/main.js",
+  "scripts": {
+    "install:backend": "npm install --prefix backend",
+    "install:frontend": "npm install --prefix frontend",
+    "prisma:generate": "npm --prefix backend run prisma:generate",
+    "db:init": "npm --prefix backend run db:init",
+    "db:seed": "npm --prefix backend run seed",
+    "frontend:build": "npm --prefix frontend run build",
+    "desktop:prepare": "npm run prisma:generate && npm run db:init && npm run db:seed && npm run frontend:build",
+    "desktop:start": "electron .",
+    "desktop": "npm run desktop:prepare && npm run desktop:start",
+    "desktop:build": "npm run desktop:prepare && electron-builder --win portable"
+  },
+  "devDependencies": {
+    "electron": "^35.1.5",
+    "electron-builder": "^24.13.3"
+  },
+  "build": {
+    "appId": "com.hallbooking.desktop",
+    "productName": "Hall Booking System",
+    "asarUnpack": [
+      "backend/node_modules/.prisma/**/*",
+      "backend/node_modules/@prisma/**/*",
+      "backend/node_modules/prisma/**/*"
+    ],
+    "files": [
+      "electron/**/*",
+      "backend/**/*",
+      "frontend/build/**/*",
+      "package.json"
+    ],
+    "win": {
+      "target": [
+        "portable"
+      ]
+    }
+  }
+}
