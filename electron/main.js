@@ -7,8 +7,12 @@ const APP_PORT = process.env.APP_PORT || '4503';
 const APP_HOST = '127.0.0.1';
 let backendProcess = null;
 
+function getAppBasePath() {
+  return app.isPackaged ? process.resourcesPath : path.join(__dirname, '..');
+}
+
 function getProjectPath(...segments) {
-  return path.join(__dirname, '..', ...segments);
+  return path.join(getAppBasePath(), ...segments);
 }
 
 function runNodeProcess(scriptPath, args = [], extraEnv = {}) {
@@ -59,16 +63,14 @@ function waitForServer(url, timeoutMs = 30000) {
 }
 
 async function prepareDatabase() {
-  const schemaPath = getProjectPath('backend', 'prisma', 'schema.prisma');
-  const prismaCliPath = getProjectPath('backend', 'node_modules', 'prisma', 'build', 'index.js');
-  const migrationFilePath = getProjectPath('backend', 'prisma', 'migrations', '20260416201807_init', 'migration.sql');
+  const initScriptPath = getProjectPath('backend', 'scripts', 'initSqlite.js');
   const seedPath = getProjectPath('backend', 'prisma', 'seed.js');
-  const databaseUrl = `file:${path.join(app.getPath('userData'), 'hall-booking.db')}`;
+  const databaseUrl = `file:${path.join(app.getPath('userData'), 'hall-booking.db').replace(/\\/g, '/')}`;
   const prismaEnv = {
     DATABASE_URL: databaseUrl,
   };
 
-  await runNodeProcess(prismaCliPath, ['db', 'execute', '--schema', schemaPath, '--file', migrationFilePath], prismaEnv);
+  await runNodeProcess(initScriptPath, [], prismaEnv);
   await runNodeProcess(seedPath, [], prismaEnv);
 
   return prismaEnv;

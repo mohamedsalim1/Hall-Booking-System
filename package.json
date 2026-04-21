@@ -24,6 +24,7 @@
     "appId": "com.hallbooking.desktop",
     "productName": "Hall Booking System",
     "asarUnpack": [
+      "backend/generated/**/*",
       "backend/node_modules/.prisma/**/*",
       "backend/node_modules/@prisma/**/*",
       "backend/node_modules/prisma/**/*"
