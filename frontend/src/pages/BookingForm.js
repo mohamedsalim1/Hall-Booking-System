@@ -209,16 +209,16 @@ const BookingForm = ({ halls, eventTypes: propEventTypes, timeSlots: propTimeSlo
                 <Select options={eventTypeOptions} value={formData.eventTypeId} onChange={(value) => handleChange('eventTypeId', value)} placeholder="اختر نوع المناسبة" />
               </div>
               <div className="form-group">
-                <label>القاعة المذهلة</label>
+                <label>القاعة</label>
                 <Select options={hallOptions} value={formData.hallId} onChange={(value) => handleChange('hallId', value)} placeholder="اختر القاعة التي تناسب ذوقك" />
               </div>
               <div className="form-grid-2">
                 <div className="form-group">
-                  <label>تاريخ الليلة الموعودة</label>
+                  <label>تاريخ المناسبة</label>
                   <input type="date" value={formData.date} onChange={(e) => handleChange('date', e.target.value)} />
                 </div>
                 <div className="form-group">
-                  <label>فترة الاحتفال</label>
+                  <label>فترة المناسبة</label>
                   <Select options={timeSlotOptions} value={formData.timeSlotId} onChange={(value) => handleChange('timeSlotId', value)} placeholder="حدد الوقت المنشود" />
                 </div>
               </div>
