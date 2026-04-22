@@ -248,7 +248,7 @@ const BookingForm = ({ halls, eventTypes: propEventTypes, timeSlots: propTimeSlo
             <Card className="luxury-card">
               <div className="form-group">
                 <label>الاسم الكريم</label>
-                <input type="text" value={formData.customerName} onChange={(e) => handleChange('customerName', e.target.value)} placeholder="أدخل اسمك الكريم" required />
+                <input type="text" value={formData.customerName} onChange={(e) => handleChange('customerName', e.target.value)} placeholder="أدخل الاسم" required />
               </div>
               <div className="form-group">
                 <label>رقم هاتف التواصل</label>
