@@ -210,7 +210,7 @@ const BookingForm = ({ halls, eventTypes: propEventTypes, timeSlots: propTimeSlo
               </div>
               <div className="form-group">
                 <label>القاعة</label>
-                <Select options={hallOptions} value={formData.hallId} onChange={(value) => handleChange('hallId', value)} placeholder="اختر القاعة التي تناسب ذوقك" />
+                <Select options={hallOptions} value={formData.hallId} onChange={(value) => handleChange('hallId', value)} placeholder="اختر القاعة" />
               </div>
               <div className="form-grid-2">
                 <div className="form-group">
