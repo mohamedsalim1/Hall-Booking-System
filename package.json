@@ -2,8 +2,7 @@
   "name": "hall-booking-system-desktop",
   "version": "1.0.0",
   "private": true,
-  "description": "Desktop wrapper for the hall booking system.",
-  "main": "electron/main.js",
+  "description": "Tauri desktop wrapper for the hall booking system.",
   "scripts": {
     "install:backend": "npm install --prefix backend",
     "install:frontend": "npm install --prefix frontend",
@@ -11,34 +10,16 @@
     "db:init": "npm --prefix backend run db:init",
     "db:seed": "npm --prefix backend run seed",
     "frontend:build": "npm --prefix frontend run build",
+    "frontend:build:desktop": "cross-env REACT_APP_API_URL=http://127.0.0.1:4503/api npm --prefix frontend run build",
     "desktop:prepare": "npm run prisma:generate && npm run db:init && npm run db:seed && npm run frontend:build",
-    "desktop:start": "electron .",
-    "desktop": "npm run desktop:prepare && npm run desktop:start",
-    "desktop:build": "npm run desktop:prepare && electron-builder --win portable"
+    "desktop:prepare:tauri": "npm run prisma:generate && npm run frontend:build:desktop",
+    "desktop:dev": "npm run desktop:prepare:tauri && npx tauri dev",
+    "desktop:build": "npm run desktop:prepare:tauri && npx tauri build",
+    "desktop:build:windows": "npm run desktop:prepare:tauri && npx tauri build --target x86_64-pc-windows-gnu"
   },
   "devDependencies": {
-    "electron": "^35.1.5",
-    "electron-builder": "^24.13.3"
-  },
-  "build": {
-    "appId": "com.hallbooking.desktop",
-    "productName": "Hall Booking System",
-    "asarUnpack": [
-      "backend/generated/**/*",
-      "backend/node_modules/.prisma/**/*",
-      "backend/node_modules/@prisma/**/*",
-      "backend/node_modules/prisma/**/*"
-    ],
-    "files": [
-      "electron/**/*",
-      "backend/**/*",
-      "frontend/build/**/*",
-      "package.json"
-    ],
-    "win": {
-      "target": [
-        "portable"
-      ]
-    }
+    "@tauri-apps/api": "^2.10.1",
+    "@tauri-apps/cli": "^2.10.1",
+    "cross-env": "^7.0.3"
   }
 }
