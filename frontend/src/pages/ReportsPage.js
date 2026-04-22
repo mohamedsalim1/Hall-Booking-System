@@ -196,7 +196,22 @@ const ReportsPage = () => {
     const ws = XLSX.utils.json_to_sheet(data);
     const wb = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb, ws, 'تقرير الحجوزات');
-    XLSX.writeFile(wb, `تقرير-الحجوزات-${filters.year}${filters.month ? `-${filters.month}` : ''}.xlsx`);
+    downloadWorkbook(wb, `تقرير-الحجوزات-${filters.year}${filters.month ? `-${filters.month}` : ''}.xlsx`);
+  };
+
+  const downloadWorkbook = (workbook, fileName) => {
+    const workbookBuffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
+    const blob = new Blob([workbookBuffer], {
+      type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+    });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = fileName;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
   };
 
   const withAutoFilter = (sheet, columnsCount, rowsCount) => {
@@ -349,7 +364,7 @@ const ReportsPage = () => {
       addSheet('خدمات الحجز', bookingServiceRows, [12, 24, 24, 14]);
 
       const fileDate = new Date().toISOString().slice(0, 10);
-      XLSX.writeFile(wb, `export-full-system-${fileDate}.xlsx`);
+      downloadWorkbook(wb, `export-full-system-${fileDate}.xlsx`);
     } catch (exportError) {
       console.error('Error exporting full system data:', exportError);
       alert('حدث خطأ أثناء التصدير الشامل. يرجى المحاولة مرة أخرى.');

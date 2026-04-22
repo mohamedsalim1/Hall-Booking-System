@@ -13,7 +13,9 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 4503;
 const HOST = process.env.HOST || '127.0.0.1';
-const frontendBuildPath = path.resolve(__dirname, '../frontend/build');
+const frontendBuildPath = process.env.FRONTEND_BUILD_PATH
+  ? path.resolve(process.env.FRONTEND_BUILD_PATH)
+  : path.resolve(__dirname, '../frontend/build');
 
 // // Security middleware
 // securityMiddleware(app);

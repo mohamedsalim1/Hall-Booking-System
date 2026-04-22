@@ -20,7 +20,8 @@
       "nsis"
     ],
     "resources": [
-      "../backend/**/*"
+      "../backend",
+      "../frontend/build"
     ],
     "windows": {
       "webviewInstallMode": {

@@ -29,6 +29,15 @@ fn node_binary() -> String {
   std::env::var("NODE_BINARY").unwrap_or_else(|_| "node".to_string())
 }
 
+fn hide_windows_console(command: &mut Command) {
+  #[cfg(target_os = "windows")]
+  {
+    use std::os::windows::process::CommandExt;
+    const CREATE_NO_WINDOW: u32 = 0x08000000;
+    command.creation_flags(CREATE_NO_WINDOW);
+  }
+}
+
 fn project_root(app: &AppHandle) -> Result<PathBuf, String> {
   if cfg!(debug_assertions) {
     let from_manifest = PathBuf::from(env!("CARGO_MANIFEST_DIR"));
@@ -44,9 +53,85 @@ fn project_root(app: &AppHandle) -> Result<PathBuf, String> {
     .map_err(|e| format!("Failed to resolve resource directory: {e}"))
 }
 
+fn resolve_backend_root(app: &AppHandle) -> Result<PathBuf, String> {
+  if cfg!(debug_assertions) {
+    return Ok(project_root(app)?.join("backend"));
+  }
+
+  let resource_dir = app
+    .path()
+    .resource_dir()
+    .map_err(|e| format!("Failed to resolve resource directory: {e}"))?;
+
+  let candidates = [
+    resource_dir.clone(),
+    resource_dir.join("backend"),
+    resource_dir.join("_up_"),
+    resource_dir.join("_up_").join("backend"),
+    resource_dir.join("resources"),
+    resource_dir.join("resources").join("backend"),
+    resource_dir.join("_up_").join("resources"),
+    resource_dir.join("_up_").join("resources").join("backend"),
+  ];
+
+  for candidate in candidates {
+    let server = candidate.join("server.js");
+    let init_sqlite = candidate.join("scripts").join("initSqlite.js");
+    if server.exists() && init_sqlite.exists() {
+      return Ok(candidate);
+    }
+  }
+
+  Err(format!(
+    "Backend resources not found under {}",
+    resource_dir.display()
+  ))
+}
+
+fn resolve_frontend_build_path(app: &AppHandle, backend_root: &Path) -> Option<PathBuf> {
+  let mut candidates = Vec::new();
+
+  if let Some(parent) = backend_root.parent() {
+    candidates.push(parent.join("frontend").join("build"));
+    candidates.push(parent.join("build"));
+  }
+
+  if let Ok(resource_dir) = app.path().resource_dir() {
+    candidates.push(resource_dir.join("build"));
+    candidates.push(resource_dir.join("frontend").join("build"));
+    candidates.push(resource_dir.join("_up_").join("build"));
+    candidates.push(resource_dir.join("_up_").join("frontend").join("build"));
+    candidates.push(resource_dir.join("_up_").join("resources").join("build"));
+    candidates.push(resource_dir.join("_up_").join("resources").join("frontend").join("build"));
+    candidates.push(resource_dir.join("resources").join("frontend").join("build"));
+    candidates.push(resource_dir.join("resources").join("build"));
+  }
+
+  candidates
+    .into_iter()
+    .find(|path| path.join("index.html").exists())
+}
+
 fn script_path(root: &Path, relative: &str) -> PathBuf {
   let parts = relative.split('/').filter(|part| !part.is_empty());
   parts.fold(root.to_path_buf(), |acc, part| acc.join(part))
+}
+
+fn normalize_windows_path(path: &Path) -> PathBuf {
+  let raw = path.to_string_lossy();
+
+  if cfg!(target_os = "windows") && raw.starts_with(r"\\?\") {
+    return PathBuf::from(raw.trim_start_matches(r"\\?\"));
+  }
+
+  path.to_path_buf()
+}
+
+fn sqlite_url(path: &Path) -> String {
+  let normalized = normalize_windows_path(path);
+  let raw = normalized.to_string_lossy().replace('\\', "/");
+
+  format!("file:{raw}")
 }
 
 fn startup_log_path(app: &AppHandle) -> Option<PathBuf> {
@@ -89,14 +174,17 @@ fn pipe_output_to_log<R: Read + Send + 'static>(reader: R, prefix: &'static str,
 }
 
 fn run_node_script(script: &Path, envs: &[(&str, String)], log_path: Option<&Path>) -> Result<(), String> {
+  let script = normalize_windows_path(script);
+
   if !script.exists() {
     return Err(format!("Missing script: {}", script.display()));
   }
 
   let mut command = Command::new(node_binary());
-  command.arg(script);
+  command.arg(&script);
   command.env("ELECTRON_RUN_AS_NODE", "1");
   command.env("APP_PORT", APP_PORT);
+  hide_windows_console(&mut command);
 
   for (key, value) in envs {
     command.env(key, value);
@@ -145,7 +233,7 @@ fn wait_for_health(url_path: &str, timeout: Duration) -> Result<(), String> {
   Err("Timed out waiting for backend health endpoint.".to_string())
 }
 
-fn prepare_database(app: &AppHandle, root: &Path, log_path: Option<&Path>) -> Result<(), String> {
+fn prepare_database(app: &AppHandle, backend_root: &Path, log_path: Option<&Path>) -> Result<(), String> {
   let data_dir = app
     .path()
     .app_data_dir()
@@ -155,10 +243,10 @@ fn prepare_database(app: &AppHandle, root: &Path, log_path: Option<&Path>) -> Re
     .map_err(|e| format!("Failed to create app data dir: {e}"))?;
 
   let db_file = data_dir.join("hall-booking.db");
-  let db_url = format!("file:{}", db_file.to_string_lossy().replace('\\', "/"));
+  let db_url = sqlite_url(&db_file);
 
-  let init_script = script_path(root, "backend/scripts/initSqlite.js");
-  let seed_script = script_path(root, "backend/prisma/seed.js");
+  let init_script = script_path(backend_root, "scripts/initSqlite.js");
+  let seed_script = script_path(backend_root, "prisma/seed.js");
 
   let envs = [("DATABASE_URL", db_url)];
   run_node_script(&init_script, &envs, log_path)?;
@@ -167,29 +255,45 @@ fn prepare_database(app: &AppHandle, root: &Path, log_path: Option<&Path>) -> Re
   Ok(())
 }
 
-fn start_backend(app: &AppHandle, root: &Path, log_path: Option<&Path>) -> Result<Child, String> {
+fn start_backend(app: &AppHandle, backend_root: &Path, log_path: Option<&Path>) -> Result<Child, String> {
   let data_dir = app
     .path()
     .app_data_dir()
     .map_err(|e| format!("Failed to resolve app data dir: {e}"))?;
   let db_file = data_dir.join("hall-booking.db");
-  let db_url = format!("file:{}", db_file.to_string_lossy().replace('\\', "/"));
-  let server_path = script_path(root, "backend/server.js");
+  let db_url = sqlite_url(&db_file);
+  let server_path = normalize_windows_path(&script_path(backend_root, "server.js"));
 
   if !server_path.exists() {
     return Err(format!("Missing backend server: {}", server_path.display()));
   }
 
-  let mut child = Command::new(node_binary())
-    .arg(server_path)
+  let frontend_build_path = resolve_frontend_build_path(app, backend_root);
+
+  let frontend_build_path = frontend_build_path.map(|p| normalize_windows_path(&p));
+
+  let mut command = Command::new(node_binary());
+  command
+    .arg(&server_path)
     .env("PORT", APP_PORT)
     .env("HOST", APP_HOST)
     .env("CLIENT_URL", format!("http://{APP_HOST}:{APP_PORT}"))
     .env("DATABASE_URL", db_url)
+    .env(
+      "FRONTEND_BUILD_PATH",
+      frontend_build_path
+        .unwrap_or_else(|| normalize_windows_path(&backend_root.join("..").join("frontend").join("build")))
+        .to_string_lossy()
+        .to_string(),
+    )
     .env("NODE_ENV", "production")
     .env("ELECTRON_RUN_AS_NODE", "1")
     .stdout(Stdio::piped())
-    .stderr(Stdio::piped())
+    .stderr(Stdio::piped());
+
+  hide_windows_console(&mut command);
+
+  let mut child = command
     .spawn()
     .map_err(|error| format!("Failed to start backend: {error}"))?;
 
@@ -253,13 +357,22 @@ pub fn run() {
       })?;
       log_line(log_path.as_deref(), &format!("Resolved project root: {}", root.display()));
 
-      prepare_database(&app.handle(), &root, log_path.as_deref()).map_err(|e| {
+      let backend_root = resolve_backend_root(&app.handle()).map_err(|e| {
+        log_line(log_path.as_deref(), &format!("resolve_backend_root failed: {e}"));
+        e
+      })?;
+      log_line(
+        log_path.as_deref(),
+        &format!("Resolved backend root: {}", backend_root.display()),
+      );
+
+      prepare_database(&app.handle(), &backend_root, log_path.as_deref()).map_err(|e| {
         log_line(log_path.as_deref(), &format!("prepare_database failed: {e}"));
         e
       })?;
       log_line(log_path.as_deref(), "Database prepared.");
 
-      let child = start_backend(&app.handle(), &root, log_path.as_deref()).map_err(|e| {
+      let child = start_backend(&app.handle(), &backend_root, log_path.as_deref()).map_err(|e| {
         log_line(log_path.as_deref(), &format!("start_backend failed: {e}"));
         e
       })?;
