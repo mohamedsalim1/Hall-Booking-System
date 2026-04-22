@@ -198,7 +198,7 @@ const BookingForm = ({ halls, eventTypes: propEventTypes, timeSlots: propTimeSlo
       <div className="luxury-booking-content fade-in-up">
         <div className="form-header luxury-header">
           <h1>{currentStep === 1 ? 'تفاصيل المناسبة' : currentStep === 2 ? 'البيانات الشخصية' : currentStep === 3 ? 'رُقي الخدمات' : currentStep === 4 ? 'تأكيد الحجز' : 'تم بنجاح'}</h1>
-          <p>{currentStep === 1 ? 'اختر المساحة والوقت اللذين يخلدان مناسبتك' : currentStep === 2 ? 'من فضلك أخبرنا بالمزيد عنك' : currentStep === 3 ? 'أضف لمسات الفخامة إلى أمسيتك' : currentStep === 4 ? 'راجع تفاصيل مناسبتك لتأكيد الحجز النهائي' : 'تم اضافة حجز جديد بنجاح'}</p>
+          <p>{currentStep === 1 ? 'اختر المساحة والوقت' : currentStep === 2 ? 'معلومات عن العميل' : currentStep === 3 ? 'أضف لمسات الفخامة إلى المناسبة' : currentStep === 4 ? 'راجع تفاصيل المناسبة لتأكيد الحجز النهائي' : 'تم اضافة حجز جديد بنجاح'}</p>
         </div>
 
         <form onSubmit={e => e.preventDefault()} className="luxury-form-wrapper">
@@ -256,7 +256,7 @@ const BookingForm = ({ halls, eventTypes: propEventTypes, timeSlots: propTimeSlo
               </div>
               <div className="form-group">
                 <label>ملاحظات خاصة (اختياري)</label>
-                <textarea value={formData.notes} onChange={(e) => handleChange('notes', e.target.value)} rows="4" placeholder="هل لديك أي طلبات مميزة لجعل ليلتك استثنائية؟"></textarea>
+                <textarea value={formData.notes} onChange={(e) => handleChange('notes', e.target.value)} rows="4" placeholder="لإضافة أي ملاحظات يريدها العميل"></textarea>
               </div>
               <div className="luxury-form-actions flex-btn">
                 <button type="button" className="secondary-button" onClick={prevStep}>رجوع</button>
