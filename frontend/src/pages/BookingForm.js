@@ -252,7 +252,7 @@ const BookingForm = ({ halls, eventTypes: propEventTypes, timeSlots: propTimeSlo
               </div>
               <div className="form-group">
                 <label>رقم هاتف التواصل</label>
-                <input type="tel" value={formData.customerPhone} onChange={(e) => handleChange('customerPhone', e.target.value)} placeholder="05XXXXXXXX" required />
+                <input type="tel" value={formData.customerPhone} onChange={(e) => handleChange('customerPhone', e.target.value)} placeholder="09XXXXXXXX" required />
               </div>
               <div className="form-group">
                 <label>ملاحظات خاصة (اختياري)</label>
