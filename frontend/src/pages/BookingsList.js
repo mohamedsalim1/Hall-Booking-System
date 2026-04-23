@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useRef } from "react";
 import { Link } from "react-router-dom";
 import Card from "../components/Card";
 import Button from "../components/Button";
@@ -38,10 +38,19 @@ const BookingsList = () => {
   });
   const [selectedBooking, setSelectedBooking] = useState(null);
   const [showDetailsModal, setShowDetailsModal] = useState(false);
+  const [searchInput, setSearchInput] = useState("");
   const [loading, setLoading] = useState(true);
+  const [isRefreshing, setIsRefreshing] = useState(false);
+  const hasLoadedOnce = useRef(false);
+  const selectedBookingRef = useRef(null);
 
   const loadData = useCallback(async () => {
-    setLoading(true);
+    if (!hasLoadedOnce.current) {
+      setLoading(true);
+    } else {
+      setIsRefreshing(true);
+    }
+
     try {
       const [bookingsData, hallsData] = await Promise.all([
         fetchBookings({
@@ -61,8 +70,10 @@ const BookingsList = () => {
       setHalls(hallsData);
 
       // Refresh selectedBooking if it's currently open
-      if (selectedBooking) {
-        const freshBooking = (bookingsData.bookings || []).find(b => b.id === selectedBooking.id);
+      if (selectedBookingRef.current) {
+        const freshBooking = (bookingsData.bookings || []).find(
+          (b) => b.id === selectedBookingRef.current.id
+        );
         if (freshBooking) {
           setSelectedBooking(freshBooking);
         }
@@ -70,13 +81,37 @@ const BookingsList = () => {
     } catch (error) {
       console.error("Error loading bookings:", error);
     } finally {
+      hasLoadedOnce.current = true;
       setLoading(false);
+      setIsRefreshing(false);
     }
   }, [filters]);
 
   useEffect(() => {
     loadData();
   }, [loadData]);
+
+  useEffect(() => {
+    const timeoutId = window.setTimeout(() => {
+      setFilters((prev) => {
+        if (prev.search === searchInput) {
+          return prev;
+        }
+
+        return {
+          ...prev,
+          search: searchInput,
+          page: 1,
+        };
+      });
+    }, 300);
+
+    return () => window.clearTimeout(timeoutId);
+  }, [searchInput]);
+
+  useEffect(() => {
+    selectedBookingRef.current = selectedBooking;
+  }, [selectedBooking]);
 
   const handleFilterChange = (field, value) => {
     setFilters((prev) => ({
@@ -257,8 +292,8 @@ const BookingsList = () => {
             <input
               type="text"
               placeholder="اسم العميل أو رقم الهاتف..."
-              value={filters.search}
-              onChange={(e) => handleFilterChange("search", e.target.value)}
+              value={searchInput}
+              onChange={(e) => setSearchInput(e.target.value)}
             />
           </div>
           <div className="filter-group">
@@ -282,6 +317,7 @@ const BookingsList = () => {
         <h2>
           الحجوزات ({pagination.totalBookings})
         </h2>
+        {isRefreshing && <small>جاري تحديث النتائج...</small>}
       </div>
       {bookings.length > 0 ? (
         <>
